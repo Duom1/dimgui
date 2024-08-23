@@ -51,13 +51,13 @@ def runCommand(command: str):
 def compileSources():
     global objRecompiled
     for i, item in enumerate(sources):
-        cfileTime = os.path.getmtime(item)
-        try:
-            ofileTime = os.path.getmtime(objs[i])
-        except FileNotFoundError:
-            ofileTime = 0
-        if (cfileTime < ofileTime):
-            continue
+        # cfileTime = os.path.getmtime(item)
+        # try:
+        #     ofileTime = os.path.getmtime(objs[i])
+        # except FileNotFoundError:
+        #     ofileTime = 0
+        # if (cfileTime < ofileTime):
+        #     continue
         objRecompiled = True
         command = " ".join([cc, compileTac, item, cflags, platformTac])
         runCommand(command);

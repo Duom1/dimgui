@@ -1,0 +1,8 @@
+/font
+*.obj
+*.exe
+*.dll
+*.lib
+*.o
+prog
+*.ttf

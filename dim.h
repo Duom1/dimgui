@@ -8,6 +8,12 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#define CHECK_FOR_ERRORS(condition, msg, additional)                           \
+  if (condition) {                                                             \
+    fprintf(stderr, "%s", msg);                                                \
+    additional                                                                 \
+  }
+
 typedef struct __DIM_vector2 {
   int x;
   int y;
@@ -42,6 +48,14 @@ typedef struct __DIM_button {
   DIM_color border_color;
 } DIM_button;
 
+DIM_button DIM_create_button(DIM_rect pos_and_size, char *text,
+                             bool border_line, int border_width,
+                             DIM_color background, DIM_color text_color,
+                             DIM_color border_color) {
+  return (DIM_button){pos_and_size, text,       border_line, border_width,
+                      background,   text_color, border_color};
+}
+
 SDL_Color DIM_color_to_sdl_color(DIM_color *color) {
   return (SDL_Color){color->r, color->g, color->b, color->a};
 }
@@ -55,24 +69,26 @@ bool DIM_draw_button_sdl(SDL_Renderer *renderer, DIM_button *button,
   SDL_Rect rect = DIM_rect_to_sdl_rect(&button->pos_and_size);
   SDL_Color background_color =
       DIM_color_to_sdl_color(&button->background_color);
-  SDL_Surface *text_surface = TTF_RenderText_Blended(
+
+  SDL_Surface *text_surface = TTF_RenderText_Solid(
       font, (char *)button->text, DIM_color_to_sdl_color(&button->text_color));
-  if (text_surface == NULL) {
-    fprintf(stderr, "could not create a text surface for button text\n");
-    fprintf(stderr, "%s\n", TTF_GetError());
-    return false;
-  }
+  CHECK_FOR_ERRORS(({ text_surface == NULL; }),
+                   "could not create text surface for button text\n",
+                   { return false; });
+
   SDL_Texture *text_texture =
       SDL_CreateTextureFromSurface(renderer, text_surface);
-  if (text_texture == NULL) {
-    fprintf(stderr, "could not create a text texture for button text\n");
-    SDL_FreeSurface(text_surface);
-    return false;
-  }
+  SDL_FreeSurface(text_surface);
+  CHECK_FOR_ERRORS(({ text_texture == NULL; }),
+                   "could not create a text texture for button text\n",
+                   { return false; })
+
   SDL_SetRenderDrawColor(renderer, background_color.r, background_color.g,
                          background_color.b, background_color.a);
   SDL_RenderFillRect(renderer, &rect);
   SDL_RenderCopy(renderer, text_texture, NULL, &rect);
+
+  SDL_DestroyTexture(text_texture);
   return true;
 }
 
