@@ -1,5 +1,5 @@
-#ifndef INCLUDE_DUI_H_
-#define INCLUDE_DUI_H_
+#ifndef INCLUDE_DIM_H_
+#define INCLUDE_DIM_H_
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_render.h>
@@ -48,19 +48,19 @@ typedef struct __DIM_button {
   DIM_color border_color;
 } DIM_button;
 
-DIM_button DIM_create_button(DIM_rect pos_and_size, char *text,
-                             bool border_line, int border_width,
-                             DIM_color background, DIM_color text_color,
-                             DIM_color border_color) {
+inline DIM_button DIM_create_button(DIM_rect pos_and_size, char *text,
+                                    bool border_line, int border_width,
+                                    DIM_color background, DIM_color text_color,
+                                    DIM_color border_color) {
   return (DIM_button){pos_and_size, text,       border_line, border_width,
                       background,   text_color, border_color};
 }
 
-SDL_Color DIM_color_to_sdl_color(DIM_color *color) {
+inline SDL_Color DIM_color_to_sdl_color(DIM_color *color) {
   return (SDL_Color){color->r, color->g, color->b, color->a};
 }
 
-SDL_Rect DIM_rect_to_sdl_rect(DIM_rect *rect) {
+inline SDL_Rect DIM_rect_to_sdl_rect(DIM_rect *rect) {
   return (SDL_Rect){rect->x, rect->y, rect->w, rect->h};
 }
 
@@ -92,4 +92,4 @@ bool DIM_draw_button_sdl(SDL_Renderer *renderer, DIM_button *button,
   return true;
 }
 
-#endif // INCLUDE_DUI_H_
+#endif // INCLUDE_DIM_H_
