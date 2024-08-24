@@ -77,8 +77,8 @@ int main(void) {
   clean_on_exit.font = font;
 
   DIM_button button =
-      DIM_create_button((DIM_rect){100, 100, 200, 100}, "hello", false, 0,
-                        DIM_GRAY, DIM_WHITE, DIM_BLACK);
+      DIM_create_button((DIM_rect){100, 100, 200, 50}, "Hello World gg", false,
+                        0, 5, DIM_GRAY, DIM_GREEN, DIM_BLACK);
 
   bool quit = false;
   SDL_Event event;
